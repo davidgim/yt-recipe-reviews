@@ -18,6 +18,14 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
+    public User(){}
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
@@ -53,5 +61,8 @@ public class User implements UserDetails {
         return true;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }

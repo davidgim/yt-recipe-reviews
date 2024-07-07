@@ -30,4 +30,8 @@ public class RecipeService {
     public void deleteRecipe(String id) {
         this.recipeRepository.deleteById(id);
     }
+
+    public Optional<Recipe> findByYoutubeUrl(String youtubeUrl) {
+        return recipeRepository.findByUrl(youtubeUrl);
+    }
 }

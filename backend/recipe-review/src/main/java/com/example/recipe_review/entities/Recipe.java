@@ -10,5 +10,13 @@ public class Recipe {
     private String title;
     private String url;
     private String thumbnail;
+
+    public Recipe() {}
+
+    public Recipe(String title, String youtubeUrl, String thumbnail) {
+        this.title = title;
+        this.url = youtubeUrl;
+        this.thumbnail = thumbnail;
+    }
 }
 
