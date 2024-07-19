@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.security.cert.Extension;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Document(collection = "users")
 public class User implements UserDetails {
@@ -17,6 +18,7 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String password;
+    private List<String> savedRecipeIds;
 
     public User(){}
 
@@ -40,6 +42,12 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() { return email; }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -65,4 +73,15 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public List<String> getSavedRecipeIds() {
+        return savedRecipeIds;
+    }
+
+    public void setSavedRecipeIds(List<String> savedRecipeIds) {
+        this.savedRecipeIds = savedRecipeIds;
+    }
 }
