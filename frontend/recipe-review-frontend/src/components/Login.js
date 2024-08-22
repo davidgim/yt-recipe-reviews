@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../features/auth/authApiSlice";
 import { setCredentials } from "../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [login, { isLoading }] = useLoginMutation();
@@ -9,6 +10,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate()
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,7 +24,11 @@ const Login = () => {
         setUsername('');
         setPassword('');
         setError('');
+        navigate('/loggedin')
     } catch (err) {
+        console.error("Error:", err);
+        const errorMessage = err?.data?.message || err?.data || 'Failed to login user';
+        setError(errorMessage);
     }
   }
   return (
@@ -39,6 +45,7 @@ const Login = () => {
             </label>
             <button type="submit" disabled={isLoading}>Login</button>
         </form>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };

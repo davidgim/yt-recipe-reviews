@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
 public interface RecipeRepository extends MongoRepository<Recipe, String> {
-    Optional<Recipe> findByUrl(String url);
+    Optional<Recipe> findByVideoId(String videoId);
 }

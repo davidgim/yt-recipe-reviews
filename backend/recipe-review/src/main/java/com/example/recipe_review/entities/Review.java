@@ -11,6 +11,12 @@ public class Review {
     private String comment;
     private int rating;
 
+    @DBRef
+    private Recipe recipe;
+
+    @DBRef
+    private User user;
+
     public Review() {}
 
     public Review(String comment, int rating, Recipe recipe, User user) {
@@ -20,11 +26,29 @@ public class Review {
         this.user = user;
     }
 
-    @DBRef
-    private Recipe recipe;
 
-    @DBRef
-    private User user;
+    public String getComment() { return comment; }
+    public int getRating() {
+        return rating;
+    }
 
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getUser() {
+        return user.getUsername();
+    }
+
+    public String getRecipe() {
+        return recipe.getTitle();
+    }
+
+    public String getId() {
+        return id;
+    }
 }
