@@ -1,6 +1,8 @@
 package com.example.recipe_review.controllers;
 
+import com.example.recipe_review.config.RegistrationError;
 import com.example.recipe_review.dto.AuthRequest;
+import com.example.recipe_review.dto.UserResponseDTO;
 import com.example.recipe_review.entities.Recipe;
 import com.example.recipe_review.entities.User;
 import com.example.recipe_review.services.UserService;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -38,9 +41,23 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        User registeredUser = userService.registerUser(user);
-        return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        Optional<Object> result = userService.registerUser(user);
+
+        if (result.isPresent()) {
+            Object response = result.get();
+            if (response instanceof User) {
+                UserResponseDTO userResponse = new UserResponseDTO(
+                        ((User) response).getUsername(),
+                        ((User) response).getEmail()
+                        // other fields
+                );
+                return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
+            } else if (response instanceof RegistrationError) {
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error");
     }
 
     @PostMapping("/login")
@@ -79,6 +96,10 @@ public class AuthController {
             Map<String, Object> response = new HashMap<>();
             response.put("token", newToken);
             response.put("refreshToken", refreshToken);
+            Map<String, Object> userMap = new HashMap<>();
+            userMap.put("username", userDetails.getUsername());
+            userMap.put("email", userService.loadUserByUsername(userDetails.getUsername()));
+            response.put("user", userMap);
             return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(403).body("Invalid refresh token");

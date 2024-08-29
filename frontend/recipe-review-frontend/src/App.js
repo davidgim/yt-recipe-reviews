@@ -20,6 +20,7 @@ function App() {
           <Route path="/" element={<Layout />} />
           <Route index element ={<Search />} />
           <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />}/>
 
           <Route path="recipe/:videoId" element={<Recipe />} />
 

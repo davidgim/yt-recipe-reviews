@@ -1,5 +1,6 @@
 package com.example.recipe_review.services;
 
+import com.example.recipe_review.config.RegistrationError;
 import com.example.recipe_review.entities.User;
 import com.example.recipe_review.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,25 +28,26 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id);
     }
 
-    public User registerUser(User user) {
+    public Optional<Object> registerUser(User user) {
         if (user.getUsername() == null || user.getUsername().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be empty");
+            return Optional.of(new RegistrationError("username", "Username cannot be empty"));
         }
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be empty");
+            return Optional.of(new RegistrationError("email", "Email cannot be empty"));
         }
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
         if (userRepository.findByUsername(user.getUsername()) != null) {
-            throw new IllegalArgumentException("Username is already taken");
+            return Optional.of(new RegistrationError("username", "Username is already taken"));
         }
         if (userRepository.findByEmail(user.getEmail()) != null) {
-            throw new IllegalArgumentException("Email is already taken");
+            return Optional.of(new RegistrationError("email", "Email is already in use"));
         }
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return Optional.of(savedUser);
     }
 
     public User findByUsername(String username) {

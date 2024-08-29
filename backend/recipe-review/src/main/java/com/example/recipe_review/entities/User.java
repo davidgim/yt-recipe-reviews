@@ -1,5 +1,6 @@
 package com.example.recipe_review.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +18,7 @@ public class User implements UserDetails {
     private String id;
     private String username;
     private String email;
+
     private String password;
     private List<String> savedRecipeIds;
 

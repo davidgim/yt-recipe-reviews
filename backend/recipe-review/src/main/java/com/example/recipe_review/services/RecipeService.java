@@ -31,7 +31,6 @@ public class RecipeService {
         String title = (String) snippet.get("title");
         String description = (String) snippet.get("description");
 
-        System.out.println("THIS IS THE VIDEODETAILS: " + videoDetails.get("snippet"));
         Map<String, Object> thumbnails = (Map<String, Object>) snippet.get("thumbnails");
         Map<String, Object> defaultThumbnail = (Map<String, Object>) thumbnails.get("default");
         String thumbnailUrl = (String) defaultThumbnail.get("url");

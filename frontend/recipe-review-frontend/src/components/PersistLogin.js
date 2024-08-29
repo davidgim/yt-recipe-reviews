@@ -1,40 +1,72 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
+import { Outlet, Link } from "react-router-dom"
+import { useEffect, useRef, useState } from 'react'
+import { useRefreshMutation } from "../features/auth/authApiSlice"
+import usePersist from "../hooks/usePersist"
 import { useSelector } from 'react-redux'
-import { useRefreshMutation } from '../features/auth/authApiSlice'
-import { selectCurrentToken } from '../features/auth/authSlice'
-import usePersist from '../hooks/usePersist'
-import { Outlet } from 'react-router-dom'
+import { selectCurrentToken } from "../features/auth/authSlice"
+import PulseLoader from "react-spinners/PulseLoader"
 
 const PersistLogin = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const token = useSelector(selectCurrentToken);
-    const [refresh] = useRefreshMutation();
-    const [persist] = usePersist();
+    const [persist] = usePersist()
+    const token = useSelector(selectCurrentToken)
+    const effectRan = useRef(false)
+
+    const [trueSuccess, setTrueSuccess] = useState(false)
+
+    const [refresh, {
+        isUninitialized,
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    }] = useRefreshMutation()
 
     useEffect(() => {
-        const verifyRefreshToken = async () => {
-            try {
-                await refresh().unwrap();
-            } catch (err) {
-                console.error("Failed to refresh token", err);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+        if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
+            
+            const verifyRefreshToken = async () => {
+                console.log('verifying refresh token')
+                try {
+                    await refresh()
 
-        if (!token && persist) {
-            verifyRefreshToken();
-        } else {
-            setIsLoading(false);
+                    setTrueSuccess(true)
+                } catch (err) {
+                    console.error(err)
+                }
+            } 
+
+            if (!token && persist) verifyRefreshToken()
         }
-    }, [token, refresh, persist])
 
-    if (isLoading) {
-        return <p>Loading...</p>
+        return () => effectRan.current = true
+
+    }, [])
+
+    let content
+    if (!persist) {
+        console.log('no persist')
+        content = <Outlet />
+    } else if (isLoading) {
+        console.log('loading')
+        content = <PulseLoader color={"#FFF"} />
+    } else if (isError) {
+        console.log('error')
+        content = (
+            <p className='errmsg'>
+                {`${error?.data?.message} - `}
+                <Link to="/login">Please login again</Link>.
+            </p>
+        )
+    } else if (isSuccess && trueSuccess) {
+        console.log('success')
+        content = <Outlet />
+    } else if (token && isUninitialized) {
+        console.log('token and uninit')
+        console.log(isUninitialized)
+        content = <Outlet />
     }
 
-    return <Outlet />
+  return content
 }
 
 export default PersistLogin

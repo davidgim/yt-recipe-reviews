@@ -12,14 +12,20 @@ const Register = () => {
     e.preventDefault();
     try {
         const user = { username, email, password };
-        await register(user).unwrap();
-        alert('User registered successfully');
-        setUsername('');
-        setEmail('');
-        setPassword('');
-        setError('');
+        const response = await register(user).unwrap();
+        if (response.username) {
+            alert('User registered successfully');
+            setUsername('');
+            setEmail('');
+            setPassword('');
+            setError('');
+        }
     } catch (err) {
-        setError(err.data || 'Failed to register user');
+        if (err.status === 400) {
+            setError(err.data.message || 'Failed to register user')
+        } else {
+            setError('Failed to register user')
+        }
     }
   };
 
