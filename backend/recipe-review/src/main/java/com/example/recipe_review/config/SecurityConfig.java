@@ -18,8 +18,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors().configurationSource(corsConfigurationSource()).and()
-            .csrf().disable()
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/**").permitAll()
                 .anyRequest().authenticated());
@@ -36,7 +36,7 @@ public class SecurityConfig {
             "https://main.d1ansrgklf7042.amplifyapp.com",
             "https://d1ansrgklf7042.amplifyapp.com"
         ));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(Arrays.asList(
             "Authorization",
             "Content-Type",
@@ -44,11 +44,13 @@ public class SecurityConfig {
             "Accept",
             "Origin",
             "Access-Control-Request-Method",
-            "Access-Control-Request-Headers"
+            "Access-Control-Request-Headers",
+            "Access-Control-Allow-Origin"
         ));
         configuration.setExposedHeaders(Arrays.asList(
             "Access-Control-Allow-Origin",
-            "Access-Control-Allow-Credentials"
+            "Access-Control-Allow-Credentials",
+            "Authorization"
         ));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
