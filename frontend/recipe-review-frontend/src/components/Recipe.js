@@ -21,7 +21,7 @@ const Recipe = () => {
         }
     }, [recipe]);
     
-    const [saveRecipeFromYoutube, { data: savedRecipe, error: saveError, isLoading: isSaveLoading}] = useSaveRecipeFromYoutubeMutation();
+    const [saveRecipeFromYoutube, { isLoading: isSaveLoading }] = useSaveRecipeFromYoutubeMutation();
     const { data: reviews, error: reviewsError, isLoading: reviewsLoading, refetch: refetchReviews} = useGetReviewsByRecipeIdQuery(recipeId, {
         skip: !recipeId,
     });

@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import React from 'react';
 import {BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { store } from './app/store';
@@ -7,7 +6,6 @@ import './App.css';
 import { Provider } from 'react-redux';
 import Recipe from './components/Recipe';
 import Login from './components/Login';
-import TestRefresh from './components/testRefresh';
 import Search from './components/Search';
 import Layout from './components/Layout';
 import PersistLogin from './components/PersistLogin';

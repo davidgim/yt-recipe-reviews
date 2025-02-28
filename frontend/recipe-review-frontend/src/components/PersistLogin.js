@@ -36,7 +36,7 @@ const PersistLogin = () => {
         }
 
         return () => effectRan.current = true
-    }, [])
+    }, [token, persist, refresh])
 
     let content
     if (!persist) {
