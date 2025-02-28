@@ -32,7 +32,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:3000",
-            "http://recipe-review-frontend.s3-website-us-west-2.amazonaws.com"
+            "http://recipe-review-frontend.s3-website-us-west-2.amazonaws.com",
+            "https://main.d1ansrgklf7042.amplifyapp.com"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList(
