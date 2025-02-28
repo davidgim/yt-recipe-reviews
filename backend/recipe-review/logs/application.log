@@ -1742,3 +1742,43 @@ Action:
 
 Consider renaming one of the beans or enabling overriding by setting spring.main.allow-bean-definition-overriding=true
 
+2025-02-28 09:03:10,115 INFO c.e.r.RecipeReviewApplication [restartedMain] Starting RecipeReviewApplication using Java 19.0.2 with PID 32804 (/Users/davidgim/coding_projects/yt_recipe_app/backend/recipe-review/target/classes started by davidgim in /Users/davidgim/coding_projects/yt_recipe_app/backend/recipe-review)
+2025-02-28 09:03:10,116 INFO c.e.r.RecipeReviewApplication [restartedMain] The following 1 profile is active: "dev"
+2025-02-28 09:03:10,175 WARN o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.support.BeanDefinitionOverrideException: Invalid bean definition with name 'passwordEncoder' defined in class path resource [com/example/recipe_review/config/WebSecurityConfig.class]: Cannot register bean definition [Root bean: class [null]; scope=; abstract=false; lazyInit=null; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=webSecurityConfig; factoryMethodName=passwordEncoder; initMethodNames=null; destroyMethodNames=[(inferred)]; defined in class path resource [com/example/recipe_review/config/WebSecurityConfig.class]] for bean 'passwordEncoder' since there is already [Root bean: class [null]; scope=; abstract=false; lazyInit=null; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=encoderConfig; factoryMethodName=passwordEncoder; initMethodNames=null; destroyMethodNames=[(inferred)]; defined in class path resource [com/example/recipe_review/config/EncoderConfig.class]] bound.
+2025-02-28 09:03:10,177 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-02-28 09:03:10,178 ERROR o.s.b.d.LoggingFailureAnalysisReporter [restartedMain] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The bean 'passwordEncoder', defined in class path resource [com/example/recipe_review/config/WebSecurityConfig.class], could not be registered. A bean with that name has already been defined in class path resource [com/example/recipe_review/config/EncoderConfig.class] and overriding is disabled.
+
+Action:
+
+Consider renaming one of the beans or enabling overriding by setting spring.main.allow-bean-definition-overriding=true
+
+2025-02-28 09:03:28,842 INFO c.e.r.RecipeReviewApplication [restartedMain] Starting RecipeReviewApplication using Java 19.0.2 with PID 32804 (/Users/davidgim/coding_projects/yt_recipe_app/backend/recipe-review/target/classes started by davidgim in /Users/davidgim/coding_projects/yt_recipe_app/backend/recipe-review)
+2025-02-28 09:03:28,843 INFO c.e.r.RecipeReviewApplication [restartedMain] The following 1 profile is active: "dev"
+2025-02-28 09:03:28,904 WARN o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.support.BeanDefinitionOverrideException: Invalid bean definition with name 'passwordEncoder' defined in class path resource [com/example/recipe_review/config/WebSecurityConfig.class]: Cannot register bean definition [Root bean: class [null]; scope=; abstract=false; lazyInit=null; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=webSecurityConfig; factoryMethodName=passwordEncoder; initMethodNames=null; destroyMethodNames=[(inferred)]; defined in class path resource [com/example/recipe_review/config/WebSecurityConfig.class]] for bean 'passwordEncoder' since there is already [Root bean: class [null]; scope=; abstract=false; lazyInit=null; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=encoderConfig; factoryMethodName=passwordEncoder; initMethodNames=null; destroyMethodNames=[(inferred)]; defined in class path resource [com/example/recipe_review/config/EncoderConfig.class]] bound.
+2025-02-28 09:03:28,906 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-02-28 09:03:28,907 ERROR o.s.b.d.LoggingFailureAnalysisReporter [restartedMain] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The bean 'passwordEncoder', defined in class path resource [com/example/recipe_review/config/WebSecurityConfig.class], could not be registered. A bean with that name has already been defined in class path resource [com/example/recipe_review/config/EncoderConfig.class] and overriding is disabled.
+
+Action:
+
+Consider renaming one of the beans or enabling overriding by setting spring.main.allow-bean-definition-overriding=true
+
