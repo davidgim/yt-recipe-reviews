@@ -4,6 +4,7 @@ import { useGetRecipeByVideoIdQuery, useSaveRecipeFromYoutubeMutation } from '..
 import { useGetReviewsByRecipeIdQuery, useAddReviewMutation } from '../features/reviews/reviewsApiSlice'
 import { selectCurrentUser } from '../features/auth/authSlice'
 import { useSelector } from 'react-redux'
+import { ClipLoader } from 'react-spinners'
 
 const Recipe = () => {
     const { videoId } = useParams();
@@ -19,6 +20,7 @@ const Recipe = () => {
             setRecipeId(recipe.id);
         }
     }, [recipe]);
+    
     const [saveRecipeFromYoutube, { data: savedRecipe, error: saveError, isLoading: isSaveLoading}] = useSaveRecipeFromYoutubeMutation();
     const { data: reviews, error: reviewsError, isLoading: reviewsLoading, refetch: refetchReviews} = useGetReviewsByRecipeIdQuery(recipeId, {
         skip: !recipeId,
@@ -26,19 +28,17 @@ const Recipe = () => {
     const [addReview] = useAddReviewMutation();
 
     const currentUser = useSelector(selectCurrentUser);
-    console.log(currentUser);
- 
 
     useEffect(() => {
         if (!recipe && !recipeLoading && !isSaveLoading) {
             saveRecipeFromYoutube(videoId)
                 .unwrap()
                 .then(() => {
-                    setShouldRefetch(true); // Indicate that we need to refetch
-                    refetchRecipe(); // Trigger refetch
+                    setShouldRefetch(true);
+                    refetchRecipe();
                 })
                 .finally(() => {
-                    setShouldRefetch(false); // Reset the flag after refetch
+                    setShouldRefetch(false);
                 });
         }
     }, [videoId, recipe, recipeLoading, isSaveLoading, saveRecipeFromYoutube, refetchRecipe]);
@@ -46,59 +46,111 @@ const Recipe = () => {
     const handleAddReview = async (e) => {
         e.preventDefault();
         const comment = e.target.elements.content.value;
-        const rating = e.target.elements.rating.value;
+        const rating = parseInt(e.target.elements.rating.value);
         const newReview = { comment, rating, recipe: { id: recipeId } };
 
         try {
-            await addReview(newReview);
-            alert('Review added successfully');
+            await addReview(newReview).unwrap();
+            e.target.reset();
             refetchReviews();
         } catch (err) {
-            console.error('Failed to add review', err);
         }
     };
 
+    const renderStars = (rating) => {
+        return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+    };
 
-  return (
-    <div>
-        {recipeLoading && <p>Loading recipe...</p>}
-        {recipeError && <p>Error loading recipe...</p>}
-        {recipe && (
-            <div>
-                <h2>{recipe.title}</h2>
-                <p>{recipe.description}</p>
-                <div className='video-container'>
-                    <iframe
-                        width="560"
-                        height="315"
-                        src={`https://www.youtube.com/embed/${recipe.videoId}`}
-                        title="Youtube Video Player"
-                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                    ></iframe>
-                </div>
-                <h3>Reviews</h3>
-                {reviewsLoading && <p>Loading reviews...</p>}
-                {reviewsError && <p>Error loading reviews...</p>}
-                {reviews && reviews.map((review) => (
-                    <div key={review.id}>
-                        <p>{review.comment}</p>
-                        <p>Rating: {review.rating}</p>
-                        <p>By: {review.user}</p>
-                    </div>
-                ))}
-                {currentUser && 
-                    <form onSubmit={handleAddReview}>
-                        <textarea name='content' placeholder='Write your review' required></textarea>
-                        <input type='number' name="rating" min={1} max={5} required />
-                        <button type='submit'>Add review</button>
-                    </form>
-                }
-
+    if (recipeLoading) {
+        return (
+            <div className="loading-spinner">
+                <ClipLoader color="#ff6b6b" size={50} />
             </div>
-        )}
-    </div>
-  )
-}
+        );
+    }
 
-export default Recipe
+    if (recipeError) {
+        return (
+            <div className="error-message">
+                <p>Error loading recipe. Please try again later.</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="recipe-details">
+            {recipe && (
+                <>
+                    <h2>{recipe.title}</h2>
+                    <p>{recipe.description}</p>
+                    <div className="video-container">
+                        <iframe
+                            src={`https://www.youtube.com/embed/${recipe.videoId}`}
+                            title="Youtube Video Player"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+                    
+                    <div className="reviews-section">
+                        <h3>Reviews</h3>
+                        {reviewsLoading ? (
+                            <div className="loading-spinner">
+                                <ClipLoader color="#ff6b6b" size={30} />
+                            </div>
+                        ) : reviewsError ? (
+                            <div className="error-message">
+                                <p>Error loading reviews. Please try again later.</p>
+                            </div>
+                        ) : (
+                            <div className="reviews-list">
+                                {reviews && reviews.length > 0 ? (
+                                    reviews.map((review) => (
+                                        <div key={review.id} className="review-card">
+                                            <p className="review-content">{review.comment}</p>
+                                            <div className="review-meta">
+                                                <span className="rating-stars">{renderStars(review.rating)}</span>
+                                                <span>By: {review.user}</span>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p>No reviews yet. Be the first to review!</p>
+                                )}
+                            </div>
+                        )}
+
+                        {currentUser && (
+                            <div className="add-review-form">
+                                <h4>Add Your Review</h4>
+                                <form onSubmit={handleAddReview}>
+                                    <textarea 
+                                        name="content" 
+                                        placeholder="Share your experience with this recipe..." 
+                                        required
+                                    ></textarea>
+                                    <div className="rating-input">
+                                        <label htmlFor="rating">Rating (1-5):</label>
+                                        <input 
+                                            type="number" 
+                                            name="rating" 
+                                            id="rating"
+                                            min="1" 
+                                            max="5" 
+                                            required 
+                                        />
+                                    </div>
+                                    <button type="submit" className="submit-review-button">
+                                        Submit Review
+                                    </button>
+                                </form>
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
+        </div>
+    );
+};
+
+export default Recipe;

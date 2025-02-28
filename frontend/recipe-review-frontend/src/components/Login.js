@@ -19,16 +19,13 @@ const Login = () => {
     try {
         const credentials = { username, password };
         const response = await login(credentials).unwrap();
-        console.log("Login Response:", response);
         const { user, token } = response;
         dispatch(setCredentials({ user, token }));
-        alert('User logged in successfully');
         setUsername('');
         setPassword('');
         setError('');
         navigate('/loggedin')
     } catch (err) {
-        console.error("Error:", err);
         const errorMessage = err?.data?.message || err?.data || 'Failed to login user';
         setError(errorMessage);
     }
@@ -37,26 +34,44 @@ const Login = () => {
   const handleToggle = () => setPersist(prev => !prev);
 
   return (
-    <div>
+    <div className="auth-container">
         <h2>Login</h2>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className="auth-form">
             <label>
                 Username
-                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                <input 
+                    type="text" 
+                    value={username} 
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your username"
+                />
             </label>
             <label>
                 Password
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input 
+                    type="password" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                />
             </label>
-            <label htmlFor="persist">
+            <label htmlFor="persist" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.5rem' }}>
+                <input 
+                    type="checkbox" 
+                    id="persist" 
+                    onChange={handleToggle} 
+                    checked={persist}
+                    style={{ width: 'auto' }}
+                />
                 Trust this device
-                <input type="checkbox" id="persist" onChange={handleToggle} checked={persist} />
             </label>
-            <button type="submit" disabled={isLoading}>Login</button>
+            <button type="submit" disabled={isLoading}>
+                {isLoading ? 'Logging in...' : 'Login'}
+            </button>
         </form>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="auth-error">{error}</p>}
     </div>
   );
 };
 
-export default Login
+export default Login;

@@ -23,12 +23,9 @@ const PersistLogin = () => {
 
     useEffect(() => {
         if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
-            
             const verifyRefreshToken = async () => {
-                console.log('verifying refresh token')
                 try {
                     await refresh()
-
                     setTrueSuccess(true)
                 } catch (err) {
                     console.error(err)
@@ -39,18 +36,14 @@ const PersistLogin = () => {
         }
 
         return () => effectRan.current = true
-
     }, [])
 
     let content
     if (!persist) {
-        console.log('no persist')
         content = <Outlet />
     } else if (isLoading) {
-        console.log('loading')
         content = <PulseLoader color={"#FFF"} />
     } else if (isError) {
-        console.log('error')
         content = (
             <p className='errmsg'>
                 {`${error?.data?.message} - `}
@@ -58,15 +51,12 @@ const PersistLogin = () => {
             </p>
         )
     } else if (isSuccess && trueSuccess) {
-        console.log('success')
         content = <Outlet />
     } else if (token && isUninitialized) {
-        console.log('token and uninit')
-        console.log(isUninitialized)
         content = <Outlet />
     }
 
-  return content
+    return content
 }
 
 export default PersistLogin

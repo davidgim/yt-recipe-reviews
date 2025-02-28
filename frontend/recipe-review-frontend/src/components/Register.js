@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useRegisterMutation } from "../features/auth/authApiSlice";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [register, { isLoading }] = useRegisterMutation();
@@ -7,6 +8,7 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -14,11 +16,11 @@ const Register = () => {
         const user = { username, email, password };
         const response = await register(user).unwrap();
         if (response.username) {
-            alert('User registered successfully');
             setUsername('');
             setEmail('');
             setPassword('');
             setError('');
+            navigate('/login');
         }
     } catch (err) {
         if (err.status === 400) {
@@ -30,24 +32,41 @@ const Register = () => {
   };
 
   return (
-    <div>
-        <h2>Register</h2>
-        <form onSubmit={handleRegister}>
+    <div className="auth-container">
+        <h2>Create Account</h2>
+        <form onSubmit={handleRegister} className="auth-form">
             <label>
-                Username:
-                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}></input>
+                Username
+                <input 
+                    type="text" 
+                    value={username} 
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Choose a username"
+                />
             </label>
             <label>
-                Email:
-                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)}></input>
+                Email
+                <input 
+                    type="email" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                />
             </label>
             <label>
-                Password:
-                <input type="text" value={password} onChange={(e) => setPassword(e.target.value)}></input>
+                Password
+                <input 
+                    type="password" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Choose a password"
+                />
             </label>
-            <button type="submit" disabled={isLoading}>Register</button>
+            <button type="submit" disabled={isLoading}>
+                {isLoading ? 'Creating Account...' : 'Create Account'}
+            </button>
         </form>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="auth-error">{error}</p>}
     </div>
   );
 };

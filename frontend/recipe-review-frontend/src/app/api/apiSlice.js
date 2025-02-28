@@ -19,7 +19,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     if (result?.error?.status === 403) {
         const refreshToken = api.getState().auth.refreshToken;
         const refreshResult = await baseQuery('/auth/refresh', api, extraOptions);
-        console.log('Made request and this is hte result: ' + refreshResult);
         if (refreshResult.data) {
             const user = api.getState().auth.user;
             api.dispatch(setCredentials({ token: refreshResult.data.token, refreshToken, user }));
@@ -27,11 +26,9 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
         } else {
             api.dispatch(logOut());
         }
-        
     }
 
     return result;
-
 }
 
 export const apiSlice = createApi({

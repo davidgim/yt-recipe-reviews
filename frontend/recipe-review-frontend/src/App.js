@@ -17,16 +17,16 @@ function App() {
     <Provider store={store}>
       <Router>
         <Routes>
-          <Route path="/" element={<Layout />} />
-          <Route index element ={<Search />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />}/>
-
-          <Route path="recipe/:videoId" element={<Recipe />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Search />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="recipe/:videoId" element={<Recipe />} />
+          </Route>
 
           <Route element={<PersistLogin />}>
-            <Route path="loggedin" element=<Layout /> >
-              <Route index element ={<Search />} />
+            <Route path="loggedin" element={<Layout />}>
+              <Route index element={<Search />} />
               <Route path="recipe/:videoId" element={<Recipe />} />
             </Route>
           </Route>
