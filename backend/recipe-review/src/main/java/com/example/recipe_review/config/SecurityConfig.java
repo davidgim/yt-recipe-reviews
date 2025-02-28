@@ -10,7 +10,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -19,17 +19,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
+            .cors().and()
+            .csrf().disable()
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers("/api/recipes/**").permitAll()
-                .requestMatchers("/api/reviews/**").permitAll()
-                .requestMatchers("/error").permitAll()
-                .anyRequest().authenticated());
+            .authorizeHttpRequests()
+                .requestMatchers("/auth/**", "/api/public/**", "/api/recipes/**", "/api/reviews/**", "/error").permitAll()
+                .requestMatchers(req -> req.getMethod().equals("OPTIONS")).permitAll()
+                .anyRequest().authenticated();
 
         return http.build();
     }
@@ -50,9 +47,14 @@ public class SecurityConfig {
             "Accept",
             "Origin",
             "Access-Control-Request-Method",
-            "Access-Control-Request-Headers"
+            "Access-Control-Request-Headers",
+            "Access-Control-Allow-Origin"
         ));
-        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+        configuration.setExposedHeaders(Arrays.asList(
+            "Authorization",
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Credentials"
+        ));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
         
