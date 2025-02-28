@@ -21,7 +21,9 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/**").permitAll()
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated());
 
         return http.build();
@@ -32,7 +34,6 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:3000",
-            "http://recipe-review-frontend.s3-website-us-west-2.amazonaws.com",
             "https://main.d1ansrgklf7042.amplifyapp.com",
             "https://d1ansrgklf7042.amplifyapp.com"
         ));
