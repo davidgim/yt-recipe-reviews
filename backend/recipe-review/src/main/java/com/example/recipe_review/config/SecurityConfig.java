@@ -29,10 +29,15 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
+                // Auth endpoints - handle both with and without leading slash
+                .requestMatchers("/auth/**", "auth/**").permitAll()
+                // Public endpoints
                 .requestMatchers("/api/public/**").permitAll()
+                // Recipe endpoints - both API and direct paths
                 .requestMatchers("/api/recipes/**", "/recipes/**").permitAll()
+                // Review endpoints - both API and direct paths
                 .requestMatchers("/api/reviews/**", "/reviews/**").permitAll()
+                // Error and OPTIONS
                 .requestMatchers("/error").permitAll()
                 .requestMatchers(req -> req.getMethod().equals("OPTIONS")).permitAll()
                 .anyRequest().authenticated())
@@ -58,7 +63,8 @@ public class SecurityConfig {
             "Origin",
             "Access-Control-Request-Method",
             "Access-Control-Request-Headers",
-            "Access-Control-Allow-Origin"
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Credentials"
         ));
         configuration.setExposedHeaders(Arrays.asList(
             "Authorization",
