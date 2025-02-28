@@ -9,28 +9,31 @@ import Login from './components/Login';
 import Search from './components/Search';
 import Layout from './components/Layout';
 import PersistLogin from './components/PersistLogin';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
-    <Provider store={store}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Search />} />
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
-            <Route path="recipe/:videoId" element={<Recipe />} />
-          </Route>
-
-          <Route element={<PersistLogin />}>
-            <Route path="loggedin" element={<Layout />}>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Layout />}>
               <Route index element={<Search />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
               <Route path="recipe/:videoId" element={<Recipe />} />
             </Route>
-          </Route>
-        </Routes>
-      </Router>
-    </Provider>
+
+            <Route element={<PersistLogin />}>
+              <Route path="loggedin" element={<Layout />}>
+                <Route index element={<Search />} />
+                <Route path="recipe/:videoId" element={<Recipe />} />
+              </Route>
+            </Route>
+          </Routes>
+        </Router>
+      </Provider>
+    </ErrorBoundary>
   );
 }
 
