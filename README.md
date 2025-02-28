@@ -30,5 +30,5 @@ I had more experience with managing things like auth slices and state management
 
 Demo:
 
-Coming Soon
+https://main.d1ansrgklf7042.amplifyapp.com/
 
